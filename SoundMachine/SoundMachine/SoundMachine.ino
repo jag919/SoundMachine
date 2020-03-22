@@ -11,6 +11,7 @@
 //Store: http://www.aliexpress.com/store/1199788
 //          http://www.dx.com/
 #include <SoftwareSerial.h>
+#include "OnkyoRI.h"
 
 #define ARDUINO_RX 5//should connect to TX of the Serial MP3 Player module
 #define ARDUINO_TX 6//connect to RX of the module
@@ -148,15 +149,20 @@ int getDegree()
 void playOrPause()
 {
 	//cli();
+  OnkyoRI onkyo(12);
+  
 	noInterrupts();
 	if (playmode == PLAY)
 	{
 		Serial.print("S");
 		playmode = PAUSE;
 		sendCommand(CMD_PAUSE, 0);
+    onkyo.send(0x420);
 	}
 	else
 	{
+    onkyo.send(0x17F);
+    onkyo.send(0x170);
 		Serial.print("P");
 		playmode = PLAY;
 		sendCommand(CMD_PLAY, 0);
